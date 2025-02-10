@@ -89,6 +89,7 @@ class Menu extends Phaser.Scene {
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyUP)) {
             this.scene.start('playScene')
+            this.cameras.main.fadeOut(200, 226, 243, 228)
         }
         if (Phaser.Input.Keyboard.JustDown(keyDOWN)) {
             this.scene.start('creditsScene')

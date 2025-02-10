@@ -61,7 +61,8 @@ class Menu extends Phaser.Scene {
         this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNumbers('slimeWalk', { start: 0, end: 3, first: 0 }),
-            frameRate: 6
+            frameRate: 4,
+            repeat: -1
         })
 
         let menuConfig = { 

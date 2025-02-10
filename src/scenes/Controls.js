@@ -1,7 +1,29 @@
-        // this.add.text(PositionX, PositionY, )
-        // Menu text
-        // this.add.text(game.config.width / 2, game.config.height / 2 - borderUISize - borderPadding, 'ROCKET PATROL: The Forgotten Mods', menuConfig).setOrigin(.5)
-        // this.add.text(game.config.width / 2, game.config.height / 2, 'Use ← → arrows to move & (F) to fire', menuConfig).setOrigin(.5)
-        // menuConfig.backgroundColor = '#00FF00'
-        // menuConfig.color = '#000'
-        // this.add.text(game.config.width / 2, game.config.height / 2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(.5)
+class Controls extends Phaser.Scene {
+    constructor() {
+        super("controlsScene") // Basically gives names the key to this object menuScene
+    }
+
+    create() {
+        // Background Color
+        this.add.rectangle(0, 0, game.config.width, game.config.height, 0x332c50).setOrigin(0,0)
+
+        // Text for the controls
+        this.add.text(5, 5, 'CONTROLS:')
+        this.add.text(15, 35, 'JUMP: Space')
+        this.add.text(15, 55, 'RESTART: R')
+        this.add.text(15, 75, 'GO BACK: ←')
+
+        // Defines control for this scene
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+        
+        // Plays the walking animation just because, since the scene felt empty
+        let slimeAnimation = this.add.sprite(game.config.width - 15, game.config.height - 15, 'slimeWalk')
+        slimeAnimation.play('walk')
+    }
+
+    update() {
+        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.scene.start('menuScene')
+        }
+    }
+}

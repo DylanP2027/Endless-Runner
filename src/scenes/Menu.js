@@ -1,3 +1,5 @@
+// Note: A lot of this code is reused from Rocket Patrol Mods
+
 class Menu extends Phaser.Scene {
     constructor() {
         super("menuScene") // Basically gives names the key to this object menuScene
@@ -7,6 +9,17 @@ class Menu extends Phaser.Scene {
 
     preload() {
         // Loads the assets
+
+        // Images for the Main Menu
+        this.load.image('titleScreen', './assets/titleScreen.png')
+        this.load.spritesheet('titleScreenButtons', './assets/titleScreenButtons.png', { // Has to be different since there's multiple sprites in this image
+            frameWidth: 160,
+            frameHeight: 144,
+            startFrame: 0,
+            endFrame: 1
+        })
+
+        // Images/Sprites for Play.js
         this.load.image('layerMain', './assets/layerMain.png')
         this.load.image('layerForeground', './assets/layerForeground.png')
         this.load.image('layerBackground1', './assets/layerBackground.png')
@@ -30,17 +43,30 @@ class Menu extends Phaser.Scene {
     }
 
     create() {
-        // Animation configuration for explosion
+        // Title Screen Image
+        let titleScreen = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreen')
+
+        // Animation for buttons on title screen
+        this.anims.create({
+            key: 'menuButtons',
+            frames: this.anims.generateFrameNumbers('titleScreenButtons', { start: 0, end: 1, first: 0 }),
+            frameRate: 1,
+            repeat: -1
+        }) 
+
+        let buttonSprite = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreenButtons')
+        buttonSprite.play('menuButtons')
+
+        // Animation configuration for the slime when walking
         this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNumbers('slimeWalk', { start: 0, end: 3, first: 0 }),
             frameRate: 6
         })
 
-        //TODO: CHANGE THE FONT TO PRESS START 2P
         let menuConfig = { 
-            fontFamily: 'Courier',
-            fontSize: '24px',
+            fontFamily: 'Verdana',
+            fontSize: '8px',
             backgroundColor: '#FFFFFF',
             color: '#000000',
             align: 'right',
@@ -51,40 +77,23 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         }
 
-        this.titleScreen = this.add.image(0, 0, 'title-screen').setOrigin(0, 0)
-
-        // Menu text
-        this.add.text(game.config.width / 2, game.config.height / 2 - borderUISize - borderPadding, 'ROCKET PATROL: The Forgotten Mods', menuConfig).setOrigin(.5)
-        this.add.text(game.config.width / 2, game.config.height / 2, 'Use ← → arrows to move & (F) to fire', menuConfig).setOrigin(.5)
-        menuConfig.backgroundColor = '#00FF00'
-        menuConfig.color = '#000'
-        this.add.text(game.config.width / 2, game.config.height / 2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(.5)
-
-        // Define keys for difficulty
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+        // Define keys for menu
+        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
+        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
     }
 
 
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            // Easy mode
-            game.settings = {
-                spaceshipSpeed: 3,
-                gameTimer: 60000
-            }
-            this.sound.play('sfx-select')
+        if (Phaser.Input.Keyboard.JustDown(keyUP)) {
             this.scene.start('playScene')
         }
+        if (Phaser.Input.Keyboard.JustDown(keyDOWN)) {
+            this.scene.start('creditsScene')
+        }
         if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
-            // Hard mode
-            game.settings = {
-                spaceshipSpeed: 4,
-                gameTimer: 45000
-            }
-            this.sound.play('sfx-select')
-            this.scene.start('playScene')
+            this.scene.start('controlsScene')
         }
     }
 }

@@ -12,12 +12,20 @@ let config = {
     type: Phaser.AUTO,
     width: 160,
     height: 144,
-    scene: [Menu, Play, GameOver]
+    pixelArt: true,
+    zoom: 4,
+    physics: {
+      default: "arcade",
+      arcade: {
+        debug: false
+      }
+    },
+    scene: [ Menu, /*Play, Credits, GameOver*/ ]
   }
   
   let game = new Phaser.Game(config) // Sets up the new phaser game.
   
-  let keyJUMP, keyRESET, keyUP, keyDOWN // Reserved keyboard bindings.
+  let keyJUMP, keyRESET, keyUP, keyDOWN, keyRIGHT // Reserved keyboard bindings.
   
   // Sets the UI size
   let borderUISize = game.config.height / 15

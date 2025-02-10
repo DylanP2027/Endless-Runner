@@ -1,5 +1,8 @@
 // Note: A lot of this code is reused from Rocket Patrol Mods
 
+// Event trigger so that menu stuff isn't triggered more than once
+let enteredMenuScene = false
+
 class Menu extends Phaser.Scene {
     constructor() {
         super("menuScene") // Basically gives names the key to this object menuScene
@@ -39,44 +42,48 @@ class Menu extends Phaser.Scene {
         })
 
         // load audio
+        this.load.audio('menuMusic', 'assets/menuMusic.mp3');
+
 
     }
 
     create() {
-        // Title Screen Image
-        let titleScreen = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreen')
-
-        // Animation for buttons on title screen
-        this.anims.create({
+        if(enteredMenuScene != true) {
+            // Animation for buttons on title screen
+            this.anims.create({
             key: 'menuButtons',
             frames: this.anims.generateFrameNumbers('titleScreenButtons', { start: 0, end: 1, first: 0 }),
             frameRate: 1,
             repeat: -1
         }) 
 
-        let buttonSprite = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreenButtons')
-        buttonSprite.play('menuButtons')
-
-        // Animation configuration for the slime when walking
-        this.anims.create({
+            // Animation configuration for the slime when walking
+            this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNumbers('slimeWalk', { start: 0, end: 3, first: 0 }),
             frameRate: 4,
             repeat: -1
         })
 
-        let menuConfig = { 
-            fontFamily: 'Verdana',
-            fontSize: '8px',
-            backgroundColor: '#FFFFFF',
-            color: '#000000',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 0
+            // Triggers menu event flag
+            enteredMenuScene = true
+            
+            // The Background Music
+            this.menuMusic = this.sound.add('menuMusic')
+            this.menuMusic.volume = 0.3
+            this.menuMusic.loop = true
+            this.menuMusic.play()
         }
+
+        // Title Screen Image
+        let titleScreen = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreen')
+
+
+
+        let buttonSprite = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreenButtons')
+        buttonSprite.play('menuButtons')
+
+
 
         // Define keys for menu
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)

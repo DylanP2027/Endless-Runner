@@ -8,7 +8,7 @@ class Credits extends Phaser.Scene {
         this.add.rectangle(0, 0, game.config.width, game.config.height, 0x332c50).setOrigin(0,0)
 
         // Text for the controls
-        this.add.text(5, 5, 'CREDITS:')
+        this.add.text(5, 5, 'CREDITS:', {font: 'Verdana', fontSize: 8})
 
         // Defines control for this scene
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)

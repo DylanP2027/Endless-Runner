@@ -8,10 +8,15 @@ class Controls extends Phaser.Scene {
         this.add.rectangle(0, 0, game.config.width, game.config.height, 0x332c50).setOrigin(0,0)
 
         // Text for the controls
-        this.add.text(5, 5, 'CONTROLS:')
-        this.add.text(15, 35, 'JUMP: Space')
-        this.add.text(15, 55, 'RESTART: R')
-        this.add.text(15, 75, 'GO BACK: ←')
+        this.add.text(5, 5, 'CONTROLS:', {font: 'Verdana', fontSize: 8})
+        this.add.text(15, 25, 'JUMP: Space', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 40, 'DOUBLE JUMP: Space', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 55, 'RESTART: R', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 70, 'GO BACK: ←', {font: 'Verdana', fontSize: 6})
+        
+        this.add.text(15, 95, 'Staying on the Ground', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 110, 'Degrades Your Mass', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 125, 'Over Time', {font: 'Verdana', fontSize: 6})
 
         // Defines control for this scene
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)

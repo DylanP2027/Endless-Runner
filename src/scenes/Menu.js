@@ -42,9 +42,11 @@ class Menu extends Phaser.Scene {
         })
 
         // load audio
-        this.load.audio('menuMusic', 'assets/menuMusic.mp3');
-
-
+        this.load.audio('menuMusic', './assets/menuMusic.mp3');
+        this.load.audio('menuSelectionSound', './assets/menuSelectionSound.wav')
+        this.load.audio('menuSelectionSoundReturn', './assets/menuSelectionSoundReturn.wav')
+        this.load.audio('jumpSound', './assets/jump.wav')
+        this.load.audio('deathSound', './assets/death.wav')
     }
 
     create() {
@@ -61,9 +63,16 @@ class Menu extends Phaser.Scene {
             this.anims.create({
             key: 'walk',
             frames: this.anims.generateFrameNumbers('slimeWalk', { start: 0, end: 3, first: 0 }),
-            frameRate: 4,
+            frameRate: 5,
             repeat: -1
         })
+
+        // Animation configuration for the slime when jumping up
+        this.anims.create({
+            key: 'jumpRise',
+            frames: this.anims.generateFrameNumbers('slimeJump', { start: 3, end: 3, first: 3 }),
+            frameRate: 1
+        })        
 
             // Triggers menu event flag
             enteredMenuScene = true
@@ -73,6 +82,9 @@ class Menu extends Phaser.Scene {
             this.menuMusic.volume = 0.3
             this.menuMusic.loop = true
             this.menuMusic.play()
+
+            this.menuSelectionSound = this.sound.add('menuSelectionSound')
+            this.menuSelectionSound.volume = 0.3
         }
 
         // Title Screen Image
@@ -97,12 +109,15 @@ class Menu extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keyUP)) {
             this.scene.start('playScene')
             this.cameras.main.fadeOut(200, 226, 243, 228)
+            this.menuSelectionSound.play()
         }
         if (Phaser.Input.Keyboard.JustDown(keyDOWN)) {
             this.scene.start('creditsScene')
+            this.menuSelectionSound.play()
         }
         if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
             this.scene.start('controlsScene')
+            this.menuSelectionSound.play()
         }
     }
 }

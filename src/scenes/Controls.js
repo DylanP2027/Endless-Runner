@@ -24,11 +24,15 @@ class Controls extends Phaser.Scene {
         // Plays the walking animation just because, since the scene felt empty
         let slimeAnimation = this.add.sprite(game.config.width - 15, game.config.height - 15, 'slimeWalk')
         slimeAnimation.play('walk')
+
+        this.menuSelectionSoundReturn = this.sound.add('menuSelectionSoundReturn')
+        this.menuSelectionSoundReturn.volume = 0.3
     }
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start('menuScene')
+            this.menuSelectionSoundReturn.play()
         }
     }
 }

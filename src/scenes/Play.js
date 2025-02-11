@@ -79,7 +79,7 @@ class Play extends Phaser.Scene {
         })
 
         this.time.addEvent({
-            delay: 1500,
+            delay: 1000,
             callback: this.updateSummonTime,
             callbackScope: this,
             loop: true
@@ -121,6 +121,19 @@ class Play extends Phaser.Scene {
             else {
                 // Summon Wall
                 this.summonTime = false
+
+                this.wallBottom = this.physics.add.image(game.config.width, game.config.height-32, 'wallBottom')
+                // Collider for rock and ground
+                this.physics.add.collider(this.wallBottom, this.layerMain)
+        
+                // Add collider for slime and rock
+                this.physics.add.collider(this.slime, this.wallBottom, () => {
+                    this.deathSound.play()
+                    this.scene.start('gameOverScene')
+                
+                })
+
+                this.wallBottom.setVelocityX(-75 * scrollSpeed);
             }
         }
 

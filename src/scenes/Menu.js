@@ -43,6 +43,7 @@ class Menu extends Phaser.Scene {
 
         // Load enemies
         this.load.image('rock', './assets/smallRock.png')
+        this.load.image('wallBottom', './assets/wall.png')
 
         // load audio
         this.load.audio('menuMusic', './assets/menuMusic.mp3');

@@ -9,6 +9,15 @@ class Credits extends Phaser.Scene {
 
         // Text for the controls
         this.add.text(5, 5, 'CREDITS:', {font: 'Verdana', fontSize: 8})
+        this.add.text(10, 20, 'MUSIC:', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 30, 'Lo-Bit 2 (LoFi, Happy)', {font: 'Verdana', fontSize: 4})
+        this.add.text(15, 40, 'by HoliznaPATREON', {font: 'Verdana', fontSize: 4})
+
+        this.add.text(10, 60, 'ART:', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 70, 'ME (Dylan Paras)', {font: 'Verdana', fontSize: 4})
+
+        this.add.text(10, 90, 'SFX:', {font: 'Verdana', fontSize: 6})
+        this.add.text(15, 100, 'ME (Dylan Paras)', {font: 'Verdana', fontSize: 4})
 
         // Defines control for this scene
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)

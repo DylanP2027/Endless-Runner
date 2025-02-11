@@ -32,7 +32,7 @@ class Play extends Phaser.Scene {
 
         this.scrollSpeed = 1 // Sets the scroll speed to the default
 
-        this.highscore = localStorage.getItem("highscore") || 0 // gets the stored highscore locally
+        this.highscore = localStorage.getItem("bestScore") || 0 // gets the stored highscore locally
 
         // Defines control for this scene
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
@@ -124,7 +124,7 @@ class Play extends Phaser.Scene {
                 // Add collider for slime and rock
                 this.physics.add.collider(this.slime, this.rock, () => {
                     if(this.score > this.highscore) {
-                        this.registry.set('bestScore', this.score);
+                        localStorage.setItem('bestScore', this.score)
                     }
 
                     this.registry.set('recentScore', this.score);
@@ -246,7 +246,7 @@ class Play extends Phaser.Scene {
     }
 
 
-    
+
     updateSummonTime() {
         this.summonTime = true
     }

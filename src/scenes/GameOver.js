@@ -27,8 +27,7 @@ class GameOver extends Phaser.Scene {
         this.add.text(10, config.height - 20, 'Return: ←', {font: 'Verdana', fontSize: 8})
     
         this.add.text(game.config.width/2 - 5, 30, this.registry.get('recentScore'), {font: 'Verdana', fontSize: 24 }).setOrigin(0,0)
-        this.add.text(game.config.width/2 - 5, 80, this.registry.get('bestScore'), {font: 'Verdana', fontSize: 24 }).setOrigin(0,0)
-    
+        this.add.text(game.config.width/2 - 5, 80, localStorage.getItem('bestScore'), {font: 'Verdana', fontSize: 24 }).setOrigin(0,0)
     }
 
     update() {

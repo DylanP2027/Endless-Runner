@@ -3,9 +3,11 @@ this.scrollSpeed = 1
 
 this.isGrounded = false // Checks to see if it can double jump
 
-this.jumps = 2 // Sets it so that you cannot jump right after loading in
+this.jumps = 3 // Sets it so that you cannot jump right after loading in
 
-this.highscore = 0
+this.highscore = 0 // sets the highscore to 0 by default
+
+
 
 class Play extends Phaser.Scene {
     constructor() {
@@ -19,16 +21,18 @@ class Play extends Phaser.Scene {
         // variables for the slime
         this.jumpVelocity = -450
         this.maxJumps = 2
-        
-        this.totalMass = 100 // Starting size of the slime
 
         this.score = 0
 
-        this.summonTime = false
+        this.summonTime = false // Event flag stated that an object cannot be summoned
     }
 
     create() {
-        this.highscore = this.registry.get('bestScore') || 0
+        this.jumps = 3 // Makes sure that the player cannot jump immediately after being loaded in
+
+        this.scrollSpeed = 1 // Sets the scroll speed to the default
+
+        this.highscore = localStorage.getItem("highscore") || 0 // gets the stored highscore locally
 
         // Defines control for this scene
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
@@ -71,11 +75,13 @@ class Play extends Phaser.Scene {
         this.deathSound = this.sound.add('deathSound')
         this.deathSound.volume = 0.6
 
+        // The intial text for the score
         this.scoreText = this.add.text(10, 10, `EXP: ${this.score}`, {
             fontSize: '8px',
             font: 'Verdana'
         })
 
+        // Event to track every 1 second so the score can increment
         this.time.addEvent({
             delay: 1000, // 1 second
             callback: this.updateScore,
@@ -83,6 +89,7 @@ class Play extends Phaser.Scene {
             loop: true // Keeps repeating
         })
 
+        // Event to track every 1 second so an object can spawn in
         this.time.addEvent({
             delay: 1000,
             callback: this.updateSummonTime,
@@ -94,15 +101,16 @@ class Play extends Phaser.Scene {
 
     update() {
         // Parallaxing background
-        this.layerBackground2.tilePositionX += (0.05 * scrollSpeed)
-        this.layerBackground1.tilePositionX += (0.1 * scrollSpeed)
-        this.layerForeground.tilePositionX += (0.75 * scrollSpeed)
+        this.layerBackground2.tilePositionX += (0.05 * this.scrollSpeed)
+        this.layerBackground1.tilePositionX += (0.1 * this.scrollSpeed)
+        this.layerForeground.tilePositionX += (0.75 * this.scrollSpeed)
 
-        if(this.summonTime) {
-            let randNum = Math.random()
+        if(this.summonTime) { // Checks if the 1 second interval has passed
+            let randNum = Math.random() // Randomly selects an object to summon
 
             if (randNum < 0.25) {
                 // Don't summon anything
+                this.summonTime = false
             }
             else if(randNum >= 0.25 && randNum < 0.5) {
                 // Rock Enemy
@@ -118,17 +126,36 @@ class Play extends Phaser.Scene {
                     if(this.score > this.highscore) {
                         this.registry.set('bestScore', this.score);
                     }
+
                     this.registry.set('recentScore', this.score);
 
                     this.deathSound.play()
                     this.scene.start('gameOverScene')
                 })
 
-                this.rock.setVelocityX(-75 * scrollSpeed);
+                this.rock.setVelocityX(-75 * this.scrollSpeed);
             }
             else if (randNum >= 0.5 && randNum <0.75) {
-                // Summon Knight
+                // Summon big rock
+                this.bigRock = this.physics.add.image(game.config.width+8, game.config.height-24, 'bigRock')
+                this.bigRock.setDepth(1)
+
                 this.summonTime = false
+                // Collider for bigRock and ground
+                this.physics.add.collider(this.bigRock, this.layerMain)
+        
+                // Add collider for slime and bigRock
+                this.physics.add.collider(this.slime, this.bigRock, () => {
+                    if(this.score > this.highscore) {
+                        localStorage.setItem('bestScore', this.score)
+                    }
+                    this.registry.set('recentScore', this.score);
+
+                    this.deathSound.play()
+                    this.scene.start('gameOverScene')
+                })
+
+                this.bigRock.setVelocityX(-75 * this.scrollSpeed);
             }
             else {
                 // Summon Wall
@@ -143,16 +170,36 @@ class Play extends Phaser.Scene {
                 // Add collider for slime and rock
                 this.physics.add.collider(this.slime, this.wallBottom, () => {
                     if(this.score > this.highscore) {
-                        this.registry.set('bestScore', this.score);
+                        localStorage.setItem('bestScore', this.score)
                     }
-                    this.registry.set('recentScore', this.score);
+                    this.registry.set('recentScore', this.score)
 
                     this.deathSound.play()
                     this.scene.start('gameOverScene')
                 })
 
-                this.wallBottom.setVelocityX(-75 * scrollSpeed);
+                this.wallBottom.setVelocityX(-75 * this.scrollSpeed);
             }
+        }
+
+        // To track when to speed up the game
+        if(this.score < 15) {
+            this.scrollSpeed = 1
+        }
+        else if(this.score >= 15 && this.score < 30) {
+            this.scrollSpeed = 1.2
+        }
+        else if(this.score >= 30 && this.score < 50) {
+            this.scrollSpeed = 1.5
+        }
+        else if(this.score >= 50 && this.score < 75) {
+            this.scrollSpeed = 2
+        }
+        else if(this.score >= 75 && this.score < 100) {
+            this.scrollSpeed = 3
+        }
+        else if(this.score >= 100) {
+            this.scrollSpeed = 4
         }
 
         // For the different lengths of holding the jump button
@@ -181,8 +228,6 @@ class Play extends Phaser.Scene {
             }
         }
 
-
-
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start('menuScene')
             this.menuSelectionSoundReturn.play()
@@ -200,6 +245,8 @@ class Play extends Phaser.Scene {
         this.scoreText.setText(`EXP: ${this.score}`); // Updates text
     }
 
+
+    
     updateSummonTime() {
         this.summonTime = true
     }

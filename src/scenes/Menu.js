@@ -11,11 +11,9 @@ class Menu extends Phaser.Scene {
     
 
     preload() {
-        // Loads the assets
-
         // Images for the Main Menu
         this.load.image('titleScreen', './assets/titleScreen.png')
-        this.load.spritesheet('titleScreenButtons', './assets/titleScreenButtons.png', { // Has to be different since there's multiple sprites in this image
+        this.load.spritesheet('titleScreenButtons', './assets/titleScreenButtons.png', {
             frameWidth: 160,
             frameHeight: 144,
             startFrame: 0,
@@ -28,13 +26,13 @@ class Menu extends Phaser.Scene {
         this.load.image('layerBackground1', './assets/layerBackground.png')
         this.load.image('layerBackground2', './assets/layerBackground2.png')
         this.load.image('layerSky', './assets/layerBackgroundSky.png')
-        this.load.spritesheet('slimeWalk', './assets/slimeWalk.png', { // Has to be different since there's multiple sprites in this image
+        this.load.spritesheet('slimeWalk', './assets/slimeWalk.png', {
             frameWidth: 16,
             frameHeight: 16,
             startFrame: 0,
             endFrame: 3
         })
-        this.load.spritesheet('slimeJump', './assets/slimeWalk.png', { // Has to be different since there's multiple sprites in this image
+        this.load.spritesheet('slimeJump', './assets/slimeWalk.png', {
             frameWidth: 16,
             frameHeight: 16,
             startFrame: 0,
@@ -47,6 +45,7 @@ class Menu extends Phaser.Scene {
         // Load enemies
         this.load.image('rock', './assets/smallRock.png')
         this.load.image('wallBottom', './assets/wall.png')
+        this.load.image('bigRock', './assets/rock.png')
 
         // load audio
         this.load.audio('menuMusic', './assets/menuMusic.mp3');
@@ -55,6 +54,8 @@ class Menu extends Phaser.Scene {
         this.load.audio('jumpSound', './assets/jump.wav')
         this.load.audio('deathSound', './assets/death.wav')
     }
+
+
 
     create() {
         if(enteredMenuScene != true) {
@@ -90,6 +91,7 @@ class Menu extends Phaser.Scene {
             this.menuMusic.loop = true
             this.menuMusic.play()
 
+            // Menu seleciton sound effect
             this.menuSelectionSound = this.sound.add('menuSelectionSound')
             this.menuSelectionSound.volume = 0.3
         }
@@ -97,12 +99,9 @@ class Menu extends Phaser.Scene {
         // Title Screen Image
         let titleScreen = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreen')
 
-
-
+        // Animates the buttons on the menu
         let buttonSprite = this.add.sprite(game.config.width / 2, game.config.height / 2, 'titleScreenButtons')
         buttonSprite.play('menuButtons')
-
-
 
         // Define keys for menu
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP)
@@ -115,7 +114,6 @@ class Menu extends Phaser.Scene {
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyUP)) {
             this.scene.start('playScene')
-            this.cameras.main.fadeOut(200, 226, 243, 228)
             this.menuSelectionSound.play()
         }
         if (Phaser.Input.Keyboard.JustDown(keyDOWN)) {

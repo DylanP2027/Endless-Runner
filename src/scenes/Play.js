@@ -46,6 +46,7 @@ class Play extends Phaser.Scene {
 
         // Adds the foreground
         this.layerForeground = this.add.tileSprite(0, 0, 160, 144, 'layerForeground').setOrigin(0, 0)
+        this.layerForeground.setDepth(2)
 
         // Add collider
         this.physics.add.collider(this.slime, this.layerMain, () => {
@@ -102,6 +103,8 @@ class Play extends Phaser.Scene {
             else if(randNum >= 0.25 && randNum < 0.5) {
                 // Rock Enemy
                 this.rock = this.physics.add.image(game.config.width+5, game.config.height-16, 'rock')
+                this.rock.setDepth(1)
+
                 this.summonTime = false
                 // Collider for rock and ground
                 this.physics.add.collider(this.rock, this.layerMain)
@@ -125,12 +128,13 @@ class Play extends Phaser.Scene {
                 this.wallBottom = this.physics.add.image(game.config.width, game.config.height-32, 'wallBottom')
                 // Collider for rock and ground
                 this.physics.add.collider(this.wallBottom, this.layerMain)
+
+                this.wallBottom.setDepth(1)
         
                 // Add collider for slime and rock
                 this.physics.add.collider(this.slime, this.wallBottom, () => {
                     this.deathSound.play()
                     this.scene.start('gameOverScene')
-                
                 })
 
                 this.wallBottom.setVelocityX(-75 * scrollSpeed);

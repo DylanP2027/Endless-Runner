@@ -5,6 +5,8 @@ this.isGrounded = false // Checks to see if it can double jump
 
 this.jumps = 2 // Sets it so that you cannot jump right after loading in
 
+this.highscore = 0
+
 class Play extends Phaser.Scene {
     constructor() {
         super("playScene") // Basically gives names the key to this object menuScene
@@ -26,6 +28,8 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.highscore = this.registry.get('bestScore') || 0
+
         // Defines control for this scene
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
         keyRESET = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
@@ -111,6 +115,11 @@ class Play extends Phaser.Scene {
         
                 // Add collider for slime and rock
                 this.physics.add.collider(this.slime, this.rock, () => {
+                    if(this.score > this.highscore) {
+                        this.registry.set('bestScore', this.score);
+                    }
+                    this.registry.set('recentScore', this.score);
+
                     this.deathSound.play()
                     this.scene.start('gameOverScene')
                 })
@@ -133,6 +142,11 @@ class Play extends Phaser.Scene {
         
                 // Add collider for slime and rock
                 this.physics.add.collider(this.slime, this.wallBottom, () => {
+                    if(this.score > this.highscore) {
+                        this.registry.set('bestScore', this.score);
+                    }
+                    this.registry.set('recentScore', this.score);
+
                     this.deathSound.play()
                     this.scene.start('gameOverScene')
                 })

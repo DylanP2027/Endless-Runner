@@ -41,6 +41,9 @@ class Menu extends Phaser.Scene {
             endFrame: 3
         })
 
+        // Load GameOver Screen
+        this.load.image('gameOverBackground', './assets/gameOverBackground.png')
+
         // Load enemies
         this.load.image('rock', './assets/smallRock.png')
         this.load.image('wallBottom', './assets/wall.png')

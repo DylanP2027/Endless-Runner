@@ -4,8 +4,7 @@ class GameOver extends Phaser.Scene {
     }
 
     create () {
-        // Background color
-        this.add.rectangle(0, 0, game.config.width, game.config.height, 0x332c50).setOrigin(0,0)
+        let gameOverBackground = this.add.sprite(game.config.width / 2, game.config.height / 2, 'gameOverBackground')
 
         this.cameras.main.fadeIn(1000, 226, 243, 228) // Face in effect
 
@@ -22,6 +21,14 @@ class GameOver extends Phaser.Scene {
 
         this.menuSelectionSound = this.sound.add('menuSelectionSound')
         this.menuSelectionSound.volume = 0.3
+
+        // Text to Return or Restart
+        this.add.text(10, game.config.height - 30, 'Restart: R', {font: 'Verdana', fontSize: 8})
+        this.add.text(10, config.height - 20, 'Return: ←', {font: 'Verdana', fontSize: 8})
+    
+        this.add.text(game.config.width/2 - 5, 30, this.registry.get('recentScore'), {font: 'Verdana', fontSize: 24 }).setOrigin(0,0)
+        this.add.text(game.config.width/2 - 5, 80, this.registry.get('bestScore'), {font: 'Verdana', fontSize: 24 }).setOrigin(0,0)
+    
     }
 
     update() {

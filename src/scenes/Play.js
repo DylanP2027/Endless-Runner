@@ -19,6 +19,10 @@ class Play extends Phaser.Scene {
         this.maxJumps = 2
         
         this.totalMass = 100 // Starting size of the slime
+
+        this.score = 0
+
+        this.summonTime = false
     }
 
     create() {
@@ -35,7 +39,7 @@ class Play extends Phaser.Scene {
         this.layerBackground2 = this.add.tileSprite(0, 0, 160, 144, 'layerBackground2').setOrigin(0, 0)
         this.layerBackground1 = this.add.tileSprite(0, 0, 160, 144, 'layerBackground1').setOrigin(0, 0)
         this.layerMain = this.physics.add.staticImage(game.config.width/2, game.config.height-8, 'layerMain')
-        
+    
         // Add the slime
         this.slime = this.physics.add.sprite(15, game.config.height/2, 'slimeWalk')
         this.slime.anims.play('walk', true)
@@ -61,6 +65,25 @@ class Play extends Phaser.Scene {
         // Sound effect for dying
         this.deathSound = this.sound.add('deathSound')
         this.deathSound.volume = 0.6
+
+        this.scoreText = this.add.text(10, 10, `EXP: ${this.score}`, {
+            fontSize: '8px',
+            font: 'Verdana'
+        })
+
+        this.time.addEvent({
+            delay: 1000, // 1 second
+            callback: this.updateScore,
+            callbackScope: this,
+            loop: true // Keeps repeating
+        })
+
+        this.time.addEvent({
+            delay: 1500,
+            callback: this.updateSummonTime,
+            callbackScope: this,
+            loop: true
+        })
     }
     
 
@@ -70,6 +93,36 @@ class Play extends Phaser.Scene {
         this.layerBackground1.tilePositionX += (0.1 * scrollSpeed)
         this.layerForeground.tilePositionX += (0.75 * scrollSpeed)
 
+        if(this.summonTime) {
+            let randNum = Math.random()
+
+            if (randNum < 0.25) {
+                // Don't summon anything
+            }
+            else if(randNum >= 0.25 && randNum < 0.5) {
+                // Rock Enemy
+                this.rock = this.physics.add.image(game.config.width+5, game.config.height-16, 'rock')
+                this.summonTime = false
+                // Collider for rock and ground
+                this.physics.add.collider(this.rock, this.layerMain)
+        
+                // Add collider for slime and rock
+                this.physics.add.collider(this.slime, this.rock, () => {
+                    this.deathSound.play()
+                    this.scene.start('gameOverScene')
+                })
+
+                this.rock.setVelocityX(-75 * scrollSpeed);
+            }
+            else if (randNum >= 0.5 && randNum <0.75) {
+                // Summon Knight
+                this.summonTime = false
+            }
+            else {
+                // Summon Wall
+                this.summonTime = false
+            }
+        }
 
         // For the different lengths of holding the jump button
         // High jump
@@ -85,7 +138,6 @@ class Play extends Phaser.Scene {
 
             this.jumps += 1
 
-            //this.slime.anims.play('walk', false)
             this.slime.anims.play('jumpRise', true)
         }
 
@@ -100,7 +152,6 @@ class Play extends Phaser.Scene {
 
 
 
-
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start('menuScene')
             this.menuSelectionSoundReturn.play()
@@ -111,4 +162,14 @@ class Play extends Phaser.Scene {
         }
     }
 
+
+
+    updateScore() {
+        this.score += 1; // Increment score
+        this.scoreText.setText(`EXP: ${this.score}`); // Updates text
+    }
+
+    updateSummonTime() {
+        this.summonTime = true
+    }
 }
